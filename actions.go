@@ -27,14 +27,14 @@ var listBeerItems = []BeerItem{
 		Id:       0,
 		Brewery:  "Autral",
 		Country:  "Punta Arenas",
-		Currency: "Peso Chileno",
+		Currency: "CLP",
 		Name:     "Autral",
 		Price:    1000},
 	{
 		Id:       1,
 		Brewery:  "CCU",
 		Country:  "Santiago",
-		Currency: "Peso Chileno",
+		Currency: "CLP",
 		Name:     "Cristal",
 		Price:    500}}
 
