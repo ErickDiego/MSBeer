@@ -1,3 +1,6 @@
 # github.com/gorilla/mux v1.8.0
 ## explicit
 github.com/gorilla/mux
+# github.com/thedevsaddam/govalidator v1.9.10
+## explicit
+github.com/thedevsaddam/govalidator
