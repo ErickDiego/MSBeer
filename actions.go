@@ -3,24 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
 )
-
-// type BeerItem struct {
-// 	Id       int64   `json:"id"`
-// 	Name     string  `json:"name"`
-// 	Brewery  string  `json:"brewery"`
-// 	Country  string  `json:"country"`
-// 	Currency string  `json:"currency"`
-// 	Price    float64 `json:"price"`
-// }
-
-// type BeerItems struct {
-// 	BeerItems []BeerItem `json:"beerItems"`
-// }
 
 var listBeerItems = []BeerItem{
 	{
@@ -43,10 +31,6 @@ type Request struct {
 	Mensaje string      `json:"mensaje"`
 	Data    interface{} `json:"data"`
 }
-
-// type BeerBox struct {
-// 	PriceTotal float64 `json:"priceTotal"`
-// }
 
 func Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Bienbenido a MS Beer")
@@ -91,38 +75,9 @@ func BeerAdd(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// var requestValidator = govalidator.MapData{
-// 	"id": []string{"required"},
-// }
-
 func GetBeer(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
-
-	// // rules := govalidator.MapData{
-	// // 	"id": []string{"required"},
-	// // }
-
-	// validador := govalidator.Options{
-	// 	Request: r,
-	// 	Rules:   requestValidator,
-	// 	Data:    params["id"]}
-
-	// v := govalidator.New(validador)
-	// err1 := v.ValidateJSON()
-
-	// /*Retornara un error si se a detectado falla en la estructura*/
-	// fmt.Println(err1)
-	// fmt.Println("-> aqioooooo")
-
-	// if len(err1) > 0 {
-	// 	json.NewEncoder(w).Encode(
-	// 		map[string]interface{}{
-	// 			"errors": err1,
-	// 		},
-	// 	)
-	// 	return
-	// }
 
 	Id, err := strconv.ParseInt(params["id"], 10, 64)
 
@@ -153,6 +108,8 @@ func GetBeer(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(404)
 		json.NewEncoder(w).Encode(request)
 	}
+
+	ConsumirAPI()
 
 }
 
@@ -210,4 +167,39 @@ func findBeer(Id int64) (beer BeerItem, tiene_datos bool) {
 	}
 
 	return datos, tieneDatos
+}
+
+type Currency struct {
+	Success   string      `json:"success"`
+	Terms     string      `json:"terms"`
+	Privacy   string      `json:"privacy"`
+	Timestamp int         `json:"timestamp"`
+	Source    string      `json:"source"`
+	Quotes    interface{} `json:"quotes"`
+}
+
+
+func ConsumirAPI() {
+	fmt.Println("Calling API...")
+
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", "http://api.currencylayer.com/live?access_key=03d6c422fccef07abae7c5aae58b4088&currencies=CLP", nil)
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+	defer resp.Body.Close()
+	
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+	var responseObject Currency
+	json.Unmarshal(bodyBytes, &responseObject)
+	fmt.Printf("API Response as struct %+v\n", responseObject)
 }
