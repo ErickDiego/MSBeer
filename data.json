@@ -1,0 +1,17 @@
+[
+      {
+        "Id" : 0,
+        "Brewery" : "Autral",
+        "Country" : "Punta Arenas",
+        "Curency" : "Peso Chileno",
+        "Name" : "Autral",
+        "Price" : 1000
+      }, {
+        "Id" : 1,
+        "Brewery" : "CCU",
+        "Country" : "Santiago",
+        "Currency" : "Peso Chileno",
+        "Name" : "Cristal",
+        "Price" : 500
+      } 
+    ]
